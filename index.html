@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Vivagram - Гид по обработке фото</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h2>Vivagram Editor</h2>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <button class="nav-item active" data-section="main">Главная</button>
+                <button class="nav-item" data-section="basics">Основы</button>
+                <button class="nav-item" data-section="processing">Обработка</button>
+                <button class="nav-item" data-section="protips">Профи</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section -->
+    <section id="main" class="section active">
+        <div class="container">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Vivagram Editor</h1>
+                    <p class="hero-subtitle">Обрабатывай и улучшай свои фотографии с ИИ</p>
+                    <p class="hero-description">Загружай любые фото в бота и превращай их в шедевры! Измени стиль, улучши качество, добавь эффекты или полностью поменяй фон.</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn--primary" data-section="basics">Изучить основы</button>
+                        <button class="btn btn--outline" onclick="Telegram.WebApp.close()">Закрыть гид</button>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-card">
+                        <div class="feature-icon">📸</div>
+                        <h4>Улучшение качества</h4>
+                        <p>Сделай фото четче и красивее</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h4>Смена стиля</h4>
+                        <p>Превращай фото в произведения искусства</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🌈</div>
+                        <h4>Цветокоррекция</h4>
+                        <p>Исправляй освещение и цвета</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Basics Section -->
+    <section id="basics" class="section">
+        <div class="container">
+            <h2 class="section-title">Основы обработки</h2>
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-icon">🎯</div>
+                    <h3>Опиши что хочешь изменить</h3>
+                    <p>Четко скажи, что нужно сделать с фотографией</p>
+                    <div class="example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">сделай фото черно-белым, улучши качество, убери фон</span>
+                    </div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-icon">🎭</div>
+                    <h3>Укажи желаемый стиль</h3>
+                    <p>Добавь описание стиля или настроения</p>
+                    <div class="example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">в стиле винтаж, как картина, профессиональное фото</span>
+                    </div>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-icon">✨</div>
+                    <h3>Будь конкретным с деталями</h3>
+                    <p>Чем точнее описание, тем лучше результат</p>
+                    <div class="example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">мягкое освещение, яркие цвета, размытый фон</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing Types Section -->
+    <section id="processing" class="section">
+        <div class="container">
+            <h2 class="section-title">Типы обработки</h2>
+            <div class="tabs">
+                <button class="tab-btn active" data-category="quality">Качество</button>
+                <button class="tab-btn" data-category="style">Стиль</button>
+                <button class="tab-btn" data-category="colors">Цвета</button>
+                <button class="tab-btn" data-category="background">Фон</button>
+                <button class="tab-btn" data-category="objects">Объекты</button>
+                <button class="tab-btn" data-category="effects">Эффекты</button>
+            </div>
+
+            <!-- Quality Tab -->
+            <div class="tab-content active" id="quality">
+                <div class="category-header">
+                    <h3>Улучшение качества</h3>
+                    <p>Сделай фото четче и красивее</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="улучши качество фото, сделай четче, убери шум">
+                        <span class="prompt-text">улучши качество фото, сделай четче, убери шум</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="повысь разрешение изображения, добавь резкость">
+                        <span class="prompt-text">повысь разрешение изображения, добавь резкость</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="профессиональная ретушь, улучши детали">
+                        <span class="prompt-text">профессиональная ретушь, улучши детали</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Style Tab -->
+            <div class="tab-content" id="style">
+                <div class="category-header">
+                    <h3>Смена стиля</h3>
+                    <p>Преврати фото в произведение искусства</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="сделай в стиле масляной живописи, художественно">
+                        <span class="prompt-text">сделай в стиле масляной живописи, художественно</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="преврати в черно-белое винтажное фото">
+                        <span class="prompt-text">преврати в черно-белое винтажное фото</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="стиль акварельного рисунка, мягкие тона">
+                        <span class="prompt-text">стиль акварельного рисунка, мягкие тона</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="как фото из Instagram, стильные фильтры">
+                        <span class="prompt-text">как фото из Instagram, стильные фильтры</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colors Tab -->
+            <div class="tab-content" id="colors">
+                <div class="category-header">
+                    <h3>Цветокоррекция</h3>
+                    <p>Исправь цвета и освещение</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="сделай цвета ярче и насыщеннее">
+                        <span class="prompt-text">сделай цвета ярче и насыщеннее</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="исправь освещение, добавь теплые тона">
+                        <span class="prompt-text">исправь освещение, добавь теплые тона</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="холодная цветовая гамма, синеватые оттенки">
+                        <span class="prompt-text">холодная цветовая гамма, синеватые оттенки</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="золотой час, теплое солнечное освещение">
+                        <span class="prompt-text">золотой час, теплое солнечное освещение</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Background Tab -->
+            <div class="tab-content" id="background">
+                <div class="category-header">
+                    <h3>Работа с фоном</h3>
+                    <p>Измени или убери фон полностью</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="убери фон, сделай прозрачным">
+                        <span class="prompt-text">убери фон, сделай прозрачным</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="размой фон красиво, портретный режим">
+                        <span class="prompt-text">размой фон красиво, портретный режим</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="замени фон на природу, горы и озеро">
+                        <span class="prompt-text">замени фон на природу, горы и озеро</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="студийный белый фон, профессиональное фото">
+                        <span class="prompt-text">студийный белый фон, профессиональное фото</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Objects Tab -->
+            <div class="tab-content" id="objects">
+                <div class="category-header">
+                    <h3>Редактирование объектов</h3>
+                    <p>Добавь, убери или измени объекты на фото</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="убери лишних людей с фотографии">
+                        <span class="prompt-text">убери лишних людей с фотографии</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="удали провода и мусор с пейзажа">
+                        <span class="prompt-text">удали провода и мусор с пейзажа</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="добавь красивые цветы на передний план">
+                        <span class="prompt-text">добавь красивые цветы на передний план</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="убери прыщи и дефекты кожи, ретушь">
+                        <span class="prompt-text">убери прыщи и дефекты кожи, ретушь</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Effects Tab -->
+            <div class="tab-content" id="effects">
+                <div class="category-header">
+                    <h3>Эффекты и фильтры</h3>
+                    <p>Добавь крутые эффекты</p>
+                </div>
+                <div class="prompts-list">
+                    <div class="prompt-item" data-prompt="добавь эффект боке, красивые блики">
+                        <span class="prompt-text">добавь эффект боке, красивые блики</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="эффект двойной экспозиции, творческое фото">
+                        <span class="prompt-text">эффект двойной экспозиции, творческое фото</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="добавь дождь или снег на фотографию">
+                        <span class="prompt-text">добавь дождь или снег на фотографию</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                    <div class="prompt-item" data-prompt="эффект старой пленки, ретро-стиль">
+                        <span class="prompt-text">эффект старой пленки, ретро-стиль</span>
+                        <button class="copy-btn">Копировать</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pro Tips Section -->
+    <section id="protips" class="section">
+        <div class="container">
+            <h2 class="section-title">Профи-техники</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <div class="tip-icon">🔄</div>
+                        <h3>Комбинируй задачи</h3>
+                    </div>
+                    <p>Можно просить несколько изменений одновременно</p>
+                    <div class="tip-example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">улучши качество, убери фон и сделай черно-белым</span>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <div class="tip-icon">🎯</div>
+                        <h3>Используй referencer</h3>
+                    </div>
+                    <p>Ссылайся на известные стили фотографии</p>
+                    <div class="tip-example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">как фото National Geographic, документальный стиль</span>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <div class="tip-icon">⚡</div>
+                        <h3>Контролируй интенсивность</h3>
+                    </div>
+                    <p>Указывай степень изменений</p>
+                    <div class="tip-example">
+                        <span class="example-label">Пример:</span>
+                        <span class="example-text">слегка размой фон, немного улучши цвета</span>
+                    </div>
+                </div>
+
+                <div class="tip-card">
+                    <div class="tip-header">
+                        <div class="tip-icon">💡</div>
+                        <h3>Учитывай исходное фото</h3>
+                    </div>
+                    <p>Промпт должен подходить к типу изображения</p>
+                    <div class="tip-example">
+                        <span class="example-label">Для портрета:</span>
+                        <span class="example-text">мягкая ретушь кожи, естественный макияж</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span id="toastText">Промпт скопирован!</span>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
