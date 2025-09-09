@@ -33,11 +33,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const originalText = this.textContent;
                 this.textContent = '✅ Скопировано!';
                 this.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-                
-                setTimeout(() => {
+
+            setTimeout(() => {
                     this.textContent = originalText;
                     this.style.background = 'linear-gradient(135deg, #6366f1, #8b5cf6)';
-                }, 2000);
+            }, 2000);
             });
         });
     });
