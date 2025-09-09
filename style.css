@@ -82,6 +82,13 @@ body {
   overflow-x: hidden;
 }
 
+/* Адаптивные изображения */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
 .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -492,7 +499,9 @@ body {
 .image-container img {
   width: 100%;
   max-width: 300px;
-  height: 200px;
+  height: auto;
+  min-height: 150px;
+  max-height: 300px;
   object-fit: cover;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-card);
@@ -550,7 +559,9 @@ body {
 
 .source-item img {
   width: 100%;
-  height: 150px;
+  height: auto;
+  min-height: 120px;
+  max-height: 200px;
   object-fit: cover;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-md);
@@ -594,7 +605,9 @@ body {
 
 .result-image img {
   width: 100%;
-  height: 200px;
+  height: auto;
+  min-height: 150px;
+  max-height: 300px;
   object-fit: cover;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
@@ -757,7 +770,9 @@ body {
 
 .example-images img {
   width: 100%;
-  height: 200px;
+  height: auto;
+  min-height: 120px;
+  max-height: 250px;
   object-fit: cover;
 }
 
@@ -1105,6 +1120,42 @@ body {
     height: 48px;
     font-size: 1rem;
   }
+
+  /* Мобильные стили для изображений */
+  .image-container img {
+    max-width: 100%;
+    height: auto;
+    min-height: 120px;
+    max-height: 200px;
+  }
+
+  .source-item img {
+    max-width: 100%;
+    height: auto;
+    min-height: 100px;
+    max-height: 150px;
+  }
+
+  .result-image img {
+    max-width: 100%;
+    height: auto;
+    min-height: 120px;
+    max-height: 200px;
+  }
+
+  .example-images img {
+    max-width: 100%;
+    height: auto;
+    min-height: 100px;
+    max-height: 180px;
+  }
+
+  .focus-item img {
+    max-width: 100%;
+    height: auto;
+    min-height: 80px;
+    max-height: 120px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1113,6 +1164,33 @@ body {
   .practices-grid {
     grid-template-columns: 1fr;
   }
+
+  /* Дополнительные стили для очень маленьких экранов */
+  .image-container img {
+    max-height: 150px;
+    min-height: 100px;
+  }
+
+  .source-item img {
+    max-height: 120px;
+    min-height: 80px;
+  }
+
+  .result-image img {
+    max-height: 150px;
+    min-height: 100px;
+  }
+
+  .example-images img {
+    max-height: 120px;
+    min-height: 80px;
+  }
+
+  .focus-item img {
+    max-height: 80px;
+    min-height: 60px;
+  }
+}
 
   .examples-grid {
     grid-template-columns: 1fr;
