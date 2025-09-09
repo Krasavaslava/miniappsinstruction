@@ -118,15 +118,22 @@ body {
 .image-container {
   text-align: center;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .image-container img {
   width: 100%;
   max-width: 300px;
   height: auto;
+  min-height: 200px;
+  max-height: 400px;
+  object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
+  background: #1e293b;
 }
 
 .image-container img:hover {
@@ -143,6 +150,7 @@ body {
   border-radius: 20px;
   font-weight: 600;
   font-size: 0.875rem;
+  z-index: 10;
 }
 
 .arrow {
@@ -150,6 +158,10 @@ body {
   color: #6366f1;
   font-weight: bold;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
 }
 
 /* Composition Example */
@@ -171,14 +183,21 @@ body {
   text-align: center;
   flex: 1;
   max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .source-item img {
   width: 100%;
   height: auto;
+  min-height: 150px;
+  max-height: 250px;
+  object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
+  background: #1e293b;
 }
 
 .source-label {
@@ -194,26 +213,40 @@ body {
   font-size: 1.5rem;
   color: #6366f1;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
 }
 
 .arrow-down {
   font-size: 2rem;
   color: #6366f1;
   margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .result-image {
   text-align: center;
   max-width: 300px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .result-image img {
   width: 100%;
   height: auto;
+  min-height: 200px;
+  max-height: 400px;
+  object-fit: contain;
   border-radius: 15px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   margin-bottom: 10px;
+  background: #1e293b;
 }
 
 .result-label {
@@ -271,6 +304,9 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 0.9rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  align-self: flex-start;
 }
 
 .copy-btn:hover {
@@ -411,6 +447,7 @@ body {
   .arrow {
     transform: rotate(90deg);
     font-size: 1.5rem;
+    min-height: 40px;
   }
 
   .source-images {
@@ -420,14 +457,28 @@ body {
 
   .plus-sign {
     transform: rotate(90deg);
+    min-height: 40px;
   }
 
   .arrow-down {
     font-size: 1.5rem;
+    min-height: 40px;
   }
 
   .image-container img {
     max-width: 100%;
+    min-height: 150px;
+    max-height: 300px;
+  }
+
+  .source-item img {
+    min-height: 120px;
+    max-height: 200px;
+  }
+
+  .result-image img {
+    min-height: 150px;
+    max-height: 300px;
   }
 
   .practices-grid {
@@ -477,5 +528,21 @@ body {
   .copy-btn {
     padding: 8px 16px;
     font-size: 0.85rem;
+    align-self: center;
+  }
+
+  .image-container img {
+    min-height: 120px;
+    max-height: 250px;
+  }
+
+  .source-item img {
+    min-height: 100px;
+    max-height: 150px;
+  }
+
+  .result-image img {
+    min-height: 120px;
+    max-height: 250px;
   }
 }
