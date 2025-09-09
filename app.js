@@ -1,4 +1,4 @@
-// Vivagram Photo Editor Mini App JavaScript
+// Enhanced Vivagram Photo Editor Mini App JavaScript
 class VivagramEditorApp {
     constructor() {
         this.currentSection = 'main';
@@ -10,6 +10,8 @@ class VivagramEditorApp {
         this.bindEvents();
         this.initializeApp();
         this.initTelegramWebApp();
+        this.initFloatingActions();
+        this.initImageLazyLoading();
     }
 
     initTelegramWebApp() {
@@ -20,10 +22,47 @@ class VivagramEditorApp {
 
             // Set theme colors
             Telegram.WebApp.setHeaderColor('#1e293b');
-            Telegram.WebApp.setBackgroundColor('#0f172a');
+            Telegram.WebApp.setBackgroundColor('#0a0f1c');
 
             // Enable closing confirmation
             Telegram.WebApp.enableClosingConfirmation();
+
+            // Configure main button
+            Telegram.WebApp.MainButton.setText('Закрыть гид');
+            Telegram.WebApp.MainButton.onClick(() => {
+                Telegram.WebApp.close();
+            });
+        }
+    }
+
+    initFloatingActions() {
+        const fabMain = document.getElementById('fabMain');
+        const fabMenu = document.getElementById('fabMenu');
+
+        if (fabMain && fabMenu) {
+            fabMain.addEventListener('click', () => {
+                fabMenu.classList.toggle('active');
+                fabMain.style.transform = fabMenu.classList.contains('active') 
+                    ? 'rotate(45deg)' : 'rotate(0deg)';
+            });
+        }
+    }
+
+    initImageLazyLoading() {
+        const images = document.querySelectorAll('img[loading="lazy"]');
+
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+
+            images.forEach(img => imageObserver.observe(img));
         }
     }
 
@@ -35,6 +74,7 @@ class VivagramEditorApp {
                 e.preventDefault();
                 const section = e.target.dataset.section;
                 this.navigateToSection(section);
+                this.trackEvent('navigation', section);
             });
         });
 
@@ -46,6 +86,7 @@ class VivagramEditorApp {
                 const section = e.target.dataset.section;
                 if (section) {
                     this.navigateToSection(section);
+                    this.trackEvent('hero_action', section);
                 }
             });
         });
@@ -57,10 +98,11 @@ class VivagramEditorApp {
                 e.preventDefault();
                 const category = e.target.dataset.category;
                 this.switchCategory(category);
+                this.trackEvent('category_change', category);
             });
         });
 
-        // Copy buttons
+        // Copy buttons with enhanced feedback
         const copyButtons = document.querySelectorAll('.copy-btn');
         copyButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -69,6 +111,7 @@ class VivagramEditorApp {
                 const promptItem = e.target.closest('.prompt-item');
                 const prompt = promptItem.dataset.prompt;
                 this.copyToClipboard(prompt, e.target);
+                this.trackEvent('copy_prompt', prompt.substring(0, 20));
             });
         });
 
@@ -79,17 +122,41 @@ class VivagramEditorApp {
                 if (e.target.classList.contains('copy-btn')) return;
                 const prompt = item.dataset.prompt;
                 this.copyToClipboard(prompt, item);
+                this.trackEvent('click_copy_prompt', prompt.substring(0, 20));
+            });
+        });
+
+        // Gallery image interactions
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        galleryItems.forEach(item => {
+            item.addEventListener('click', () => {
+                this.showImageModal(item.querySelector('img').src);
             });
         });
 
         // Keyboard navigation
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
+                this.closeModals();
                 if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                     Telegram.WebApp.close();
                 }
             }
+
+            // Quick navigation with numbers
+            if (e.key >= '1' && e.key <= '5') {
+                const sections = ['main', 'basics', 'processing', 'protips', 'gallery'];
+                const index = parseInt(e.key) - 1;
+                if (sections[index]) {
+                    this.navigateToSection(sections[index]);
+                }
+            }
         });
+
+        // Scroll-based nav highlighting
+        window.addEventListener('scroll', this.throttle(() => {
+            this.updateActiveNavOnScroll();
+        }, 100));
     }
 
     initializeApp() {
@@ -103,25 +170,46 @@ class VivagramEditorApp {
         // Add loading animation
         document.body.style.opacity = '0';
         setTimeout(() => {
-            document.body.style.transition = 'opacity 0.3s ease';
+            document.body.style.transition = 'opacity 0.6s ease';
             document.body.style.opacity = '1';
         }, 100);
+
+        // Initialize particles or other visual effects
+        this.initVisualEffects();
+    }
+
+    initVisualEffects() {
+        // Add subtle animations to feature cards
+        const featureCards = document.querySelectorAll('.feature-card');
+        featureCards.forEach((card, index) => {
+            card.style.animationDelay = `\${index * 0.1}s`;
+            card.classList.add('animate-in');
+        });
     }
 
     navigateToSection(sectionId) {
         if (sectionId === this.currentSection) return;
 
-        this.currentSection = sectionId;
-        this.showSection(sectionId);
-        this.updateNavigation();
-
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // Vibrate if supported
-        if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-            Telegram.WebApp.HapticFeedback.impactOccurred('light');
+        // Add exit animation to current section
+        const currentSectionEl = document.getElementById(this.currentSection);
+        if (currentSectionEl) {
+            currentSectionEl.style.opacity = '0';
+            currentSectionEl.style.transform = 'translateY(-20px)';
         }
+
+        setTimeout(() => {
+            this.currentSection = sectionId;
+            this.showSection(sectionId);
+            this.updateNavigation();
+
+            // Scroll to top smoothly
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Haptic feedback
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+        }, 150);
     }
 
     showSection(sectionId) {
@@ -129,21 +217,48 @@ class VivagramEditorApp {
         const sections = document.querySelectorAll('.section');
         sections.forEach(section => {
             section.classList.remove('active');
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(20px)';
         });
 
-        // Show target section
+        // Show target section with animation
         const targetSection = document.getElementById(sectionId);
         if (targetSection) {
             targetSection.classList.add('active');
+            setTimeout(() => {
+                targetSection.style.opacity = '1';
+                targetSection.style.transform = 'translateY(0)';
+            }, 50);
         }
     }
 
     updateNavigation() {
-        // Update nav items
+        // Update nav items with smooth transitions
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.classList.remove('active');
             if (item.dataset.section === this.currentSection) {
+                item.classList.add('active');
+            }
+        });
+    }
+
+    updateActiveNavOnScroll() {
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - 200) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navItems.forEach(item => {
+            item.classList.remove('active');
+            if (item.dataset.section === current) {
                 item.classList.add('active');
             }
         });
@@ -163,17 +278,21 @@ class VivagramEditorApp {
     }
 
     showCategory(category) {
-        // Hide all tab contents
+        // Hide all tab contents with fade effect
         const tabContents = document.querySelectorAll('.tab-content');
         tabContents.forEach(content => {
             content.classList.remove('active');
+            content.style.opacity = '0';
         });
 
         // Show target category
-        const targetContent = document.getElementById(category);
-        if (targetContent) {
-            targetContent.classList.add('active');
-        }
+        setTimeout(() => {
+            const targetContent = document.getElementById(category);
+            if (targetContent) {
+                targetContent.classList.add('active');
+                targetContent.style.opacity = '1';
+            }
+        }, 150);
     }
 
     updateCategoryTabs() {
@@ -206,8 +325,9 @@ class VivagramEditorApp {
                 textArea.remove();
             }
 
-            this.showToast('Промпт скопирован!');
+            this.showToast('Промпт скопирован! 🎉', 'success');
             this.animateCopyButton(element);
+            this.createConfetti(element);
 
             // Haptic feedback
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
@@ -216,11 +336,49 @@ class VivagramEditorApp {
 
         } catch (err) {
             console.error('Failed to copy text: ', err);
-            this.showToast('Ошибка копирования', 'error');
+            this.showToast('Ошибка копирования 😞', 'error');
 
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 Telegram.WebApp.HapticFeedback.notificationOccurred('error');
             }
+        }
+    }
+
+    createConfetti(element) {
+        // Simple confetti effect
+        const rect = element.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+
+        for (let i = 0; i < 10; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = centerX + 'px';
+            confetti.style.top = centerY + 'px';
+            confetti.style.width = '6px';
+            confetti.style.height = '6px';
+            confetti.style.backgroundColor = `hsl(\${Math.random() * 360}, 70%, 60%)`;
+            confetti.style.borderRadius = '50%';
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '10000';
+            confetti.style.transform = 'scale(0)';
+            confetti.style.transition = 'all 0.6s ease-out';
+
+            document.body.appendChild(confetti);
+
+            setTimeout(() => {
+                const angle = (Math.PI * 2 * i) / 10;
+                const distance = 50 + Math.random() * 50;
+                const x = Math.cos(angle) * distance;
+                const y = Math.sin(angle) * distance;
+
+                confetti.style.transform = `translate(\${x}px, \${y}px) scale(1)`;
+                confetti.style.opacity = '0';
+            }, 10);
+
+            setTimeout(() => {
+                document.body.removeChild(confetti);
+            }, 700);
         }
     }
 
@@ -251,14 +409,82 @@ class VivagramEditorApp {
 
         if (button) {
             const originalText = button.textContent;
-            button.textContent = '✓ Скопировано';
+            button.textContent = '✅ Скопировано!';
             button.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+            button.style.transform = 'scale(1.1)';
 
             setTimeout(() => {
                 button.textContent = originalText;
                 button.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-            }, 1500);
+                button.style.transform = 'scale(1)';
+            }, 2000);
         }
+    }
+
+    showImageModal(imageSrc) {
+        // Create modal for image viewing
+        const modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        `;
+
+        const img = document.createElement('img');
+        img.src = imageSrc;
+        img.style.cssText = `
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        `;
+
+        modal.appendChild(img);
+        document.body.appendChild(modal);
+
+        setTimeout(() => {
+            modal.style.opacity = '1';
+            img.style.transform = 'scale(1)';
+        }, 10);
+
+        modal.addEventListener('click', () => {
+            modal.style.opacity = '0';
+            img.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+            }, 300);
+        });
+    }
+
+    closeModals() {
+        const modals = document.querySelectorAll('.image-modal');
+        modals.forEach(modal => {
+            modal.click();
+        });
+    }
+
+    trackEvent(eventName, eventValue) {
+        // Simple analytics tracking
+        if (typeof gtag !== 'undefined') {
+            gtag('event', eventName, {
+                event_category: 'engagement',
+                event_label: eventValue
+            });
+        }
+
+        console.log(`📊 Event: \${eventName}, Value: \${eventValue}`);
     }
 
     // Utility methods
@@ -288,7 +514,7 @@ class VivagramEditorApp {
     }
 }
 
-// Advanced features for better UX
+// Enhanced features for better UX
 class AdvancedFeatures {
     constructor(app) {
         this.app = app;
@@ -300,16 +526,58 @@ class AdvancedFeatures {
         this.setupSwipeGestures();
         this.setupSearchFunctionality();
         this.setupFavorites();
+        this.setupProgressTracking();
+    }
+
+    setupProgressTracking() {
+        // Track user progress through the guide
+        const sections = ['main', 'basics', 'processing', 'protips', 'gallery'];
+        let visitedSections = JSON.parse(localStorage.getItem('visited_sections') || '[]');
+
+        const originalNavigate = this.app.navigateToSection.bind(this.app);
+        this.app.navigateToSection = (sectionId) => {
+            originalNavigate(sectionId);
+
+            if (!visitedSections.includes(sectionId)) {
+                visitedSections.push(sectionId);
+                localStorage.setItem('visited_sections', JSON.stringify(visitedSections));
+
+                // Show completion progress
+                const progress = (visitedSections.length / sections.length) * 100;
+                if (progress === 100) {
+                    setTimeout(() => {
+                        this.app.showToast('🎉 Поздравляем! Вы изучили весь гид!', 'success');
+                    }, 1000);
+                }
+            }
+        };
     }
 
     setupKeyboardShortcuts() {
         document.addEventListener('keydown', (e) => {
-            // Numbers 1-4 for quick navigation
-            if (e.key >= '1' && e.key <= '4') {
-                const sections = ['main', 'basics', 'processing', 'protips'];
-                const index = parseInt(e.key) - 1;
-                if (sections[index]) {
-                    this.app.navigateToSection(sections[index]);
+            // Enhanced keyboard navigation
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case '1':
+                        e.preventDefault();
+                        this.app.navigateToSection('main');
+                        break;
+                    case '2':
+                        e.preventDefault();
+                        this.app.navigateToSection('basics');
+                        break;
+                    case '3':
+                        e.preventDefault();
+                        this.app.navigateToSection('processing');
+                        break;
+                    case '4':
+                        e.preventDefault();
+                        this.app.navigateToSection('protips');
+                        break;
+                    case '5':
+                        e.preventDefault();
+                        this.app.navigateToSection('gallery');
+                        break;
                 }
             }
 
@@ -347,17 +615,15 @@ class AdvancedFeatures {
             const deltaX = startX - endX;
             const deltaY = startY - endY;
 
-            // Horizontal swipe
+            // Horizontal swipe for categories
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 50) {
                 if (this.app.currentSection === 'processing') {
                     const categories = ['quality', 'style', 'colors', 'background', 'objects', 'effects'];
                     const currentIndex = categories.indexOf(this.app.currentCategory);
 
                     if (deltaX > 0 && currentIndex < categories.length - 1) {
-                        // Swipe left - next category
                         this.app.switchCategory(categories[currentIndex + 1]);
                     } else if (deltaX < 0 && currentIndex > 0) {
-                        // Swipe right - previous category
                         this.app.switchCategory(categories[currentIndex - 1]);
                     }
                 }
@@ -369,91 +635,162 @@ class AdvancedFeatures {
     }
 
     setupSearchFunctionality() {
-        // Create search input (hidden by default, can be activated with Ctrl+F)
-        const searchInput = document.createElement('input');
-        searchInput.type = 'text';
-        searchInput.placeholder = 'Поиск промптов...';
-        searchInput.className = 'search-input';
-        searchInput.style.cssText = `
+        // Enhanced search with better UI
+        const searchOverlay = document.createElement('div');
+        searchOverlay.className = 'search-overlay';
+        searchOverlay.style.cssText = `
             position: fixed;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            border: 2px solid var(--primary-color);
-            border-radius: 25px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            font-size: 16px;
-            width: 300px;
-            max-width: 80vw;
-            z-index: 1001;
-            transition: top 0.3s ease;
-            outline: none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 15, 28, 0.95);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 20vh;
+            z-index: 9999;
         `;
 
-        document.body.appendChild(searchInput);
+        const searchContainer = document.createElement('div');
+        searchContainer.style.cssText = `
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow-glow);
+        `;
 
-        // Toggle search with Ctrl+F
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'f') {
-                e.preventDefault();
-                this.toggleSearch(searchInput);
-            } else if (e.key === 'Escape') {
-                this.hideSearch(searchInput);
-            }
-        });
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.placeholder = '🔍 Поиск промптов...';
+        searchInput.style.cssText = `
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        `;
+
+        const searchResults = document.createElement('div');
+        searchResults.className = 'search-results';
+        searchResults.style.cssText = `
+            margin-top: 16px;
+            max-height: 300px;
+            overflow-y: auto;
+        `;
+
+        searchContainer.appendChild(searchInput);
+        searchContainer.appendChild(searchResults);
+        searchOverlay.appendChild(searchContainer);
+        document.body.appendChild(searchOverlay);
 
         // Search functionality
         searchInput.addEventListener('input', this.app.debounce((e) => {
-            this.searchPrompts(e.target.value);
+            this.performSearch(e.target.value, searchResults);
         }, 300));
-    }
 
-    toggleSearch(searchInput) {
-        const isVisible = searchInput.style.top === '20px';
-        if (isVisible) {
-            this.hideSearch(searchInput);
-        } else {
-            searchInput.style.top = '20px';
-            searchInput.focus();
-        }
-    }
+        // Toggle search with Ctrl+F or Cmd+F
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                this.toggleSearch(searchOverlay, searchInput);
+            } else if (e.key === 'Escape') {
+                this.hideSearch(searchOverlay);
+            }
+        });
 
-    hideSearch(searchInput) {
-        searchInput.style.top = '-50px';
-        searchInput.value = '';
-        this.searchPrompts('');
-    }
-
-    searchPrompts(query) {
-        const promptItems = document.querySelectorAll('.prompt-item');
-        const lowercaseQuery = query.toLowerCase();
-
-        promptItems.forEach(item => {
-            const promptText = item.dataset.prompt.toLowerCase();
-            const matches = promptText.includes(lowercaseQuery);
-
-            item.style.display = matches || !query ? 'flex' : 'none';
-
-            // Highlight matching text
-            if (query && matches) {
-                const textElement = item.querySelector('.prompt-text');
-                const originalText = item.dataset.prompt;
-                const highlightedText = originalText.replace(
-                    new RegExp(query, 'gi'),
-                    match => `<mark style="background: var(--warning-color); color: var(--bg-primary);">${match}</mark>`
-                );
-                textElement.innerHTML = highlightedText;
-            } else {
-                const textElement = item.querySelector('.prompt-text');
-                textElement.textContent = item.dataset.prompt;
+        searchOverlay.addEventListener('click', (e) => {
+            if (e.target === searchOverlay) {
+                this.hideSearch(searchOverlay);
             }
         });
     }
 
+    toggleSearch(overlay, input) {
+        if (overlay.style.display === 'flex') {
+            this.hideSearch(overlay);
+        } else {
+            overlay.style.display = 'flex';
+            input.focus();
+        }
+    }
+
+    hideSearch(overlay) {
+        overlay.style.display = 'none';
+    }
+
+    performSearch(query, resultsContainer) {
+        if (!query.trim()) {
+            resultsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Введите запрос для поиска промптов</p>';
+            return;
+        }
+
+        const allPrompts = document.querySelectorAll('.prompt-item');
+        const results = [];
+
+        allPrompts.forEach(item => {
+            const promptText = item.dataset.prompt.toLowerCase();
+            const queryLower = query.toLowerCase();
+
+            if (promptText.includes(queryLower)) {
+                results.push({
+                    text: item.dataset.prompt,
+                    element: item
+                });
+            }
+        });
+
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; padding: 20px;">Промпты не найдены</p>';
+            return;
+        }
+
+        resultsContainer.innerHTML = results.map(result => `
+            <div class="search-result-item" style="
+                background: var(--bg-primary);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 12px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            " data-prompt="\${result.text}">
+                <span style="color: var(--text-primary);">\${this.highlightText(result.text, query)}</span>
+            </div>
+        `).join('');
+
+        // Add click handlers to search results
+        resultsContainer.querySelectorAll('.search-result-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const prompt = item.dataset.prompt;
+                this.app.copyToClipboard(prompt, item);
+                this.hideSearch(resultsContainer.closest('.search-overlay'));
+            });
+
+            item.addEventListener('mouseenter', () => {
+                item.style.backgroundColor = 'var(--bg-hover)';
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.style.backgroundColor = 'var(--bg-primary)';
+            });
+        });
+    }
+
+    highlightText(text, query) {
+        const regex = new RegExp(`(\${query})`, 'gi');
+        return text.replace(regex, '<mark style="background: var(--warning-color); color: var(--bg-primary); padding: 2px 4px; border-radius: 4px;">$1</mark>');
+    }
+
     setupFavorites() {
-        // Add favorite buttons to prompt items
+        // Enhanced favorites system
         const promptItems = document.querySelectorAll('.prompt-item');
         promptItems.forEach(item => {
             const favoriteBtn = document.createElement('button');
@@ -463,15 +800,31 @@ class AdvancedFeatures {
                 background: none;
                 border: none;
                 color: var(--text-muted);
-                font-size: 1.2rem;
+                font-size: 1.5rem;
                 cursor: pointer;
                 margin-left: auto;
-                transition: color 0.2s ease;
+                transition: all 0.3s ease;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             `;
 
             favoriteBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 this.toggleFavorite(item, favoriteBtn);
+            });
+
+            favoriteBtn.addEventListener('mouseenter', () => {
+                favoriteBtn.style.backgroundColor = 'var(--bg-glass)';
+                favoriteBtn.style.transform = 'scale(1.1)';
+            });
+
+            favoriteBtn.addEventListener('mouseleave', () => {
+                favoriteBtn.style.backgroundColor = 'transparent';
+                favoriteBtn.style.transform = 'scale(1)';
             });
 
             item.insertBefore(favoriteBtn, item.querySelector('.copy-btn'));
@@ -490,17 +843,15 @@ class AdvancedFeatures {
         let favorites = this.getFavorites();
 
         if (favorites.includes(prompt)) {
-            // Remove from favorites
             favorites = favorites.filter(fav => fav !== prompt);
             button.innerHTML = '☆';
             button.style.color = 'var(--text-muted)';
-            this.app.showToast('Удалено из избранного');
+            this.app.showToast('❌ Удалено из избранного');
         } else {
-            // Add to favorites
             favorites.push(prompt);
             button.innerHTML = '★';
             button.style.color = 'var(--warning-color)';
-            this.app.showToast('Добавлено в избранное');
+            this.app.showToast('⭐ Добавлено в избранное');
         }
 
         this.saveFavorites(favorites);
@@ -524,22 +875,21 @@ class AdvancedFeatures {
     }
 }
 
-// Initialize the application
+// Initialize the application when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     const app = new VivagramEditorApp();
     new AdvancedFeatures(app);
 
-    // Performance optimization
-    if ('serviceWorker' in navigator) {
+    // Global app reference
+    window.vivagramApp = app;
+
+    // Performance monitoring
+    if ('performance' in window) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(() => {
-                // Service worker registration failed, but that's okay
-            });
+            const loadTime = performance.now();
+            console.log(`🚀 Vivagram Editor загружен за \${Math.round(loadTime)}ms`);
         });
     }
 
-    // Analytics (if needed)
-    window.vivagramApp = app;
-
-    console.log('🎨 Vivagram Editor загружен успешно!');
+    console.log('🎨 Vivagram Editor инициализирован успешно!');
 });
