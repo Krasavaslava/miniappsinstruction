@@ -42,7 +42,7 @@ class VivagramProApp {
     setupProgressTracking() {
         const progressBar = document.getElementById('progressBar');
         if (progressBar) {
-            const sections = ['main', 'examples', 'practices', 'templates'];
+            const sections = ['main', 'examples', 'practices', 'templates', 'development'];
             const updateProgress = () => {
                 const progress = (this.visitedSections.size / sections.length) * 100;
                 progressBar.style.width = progress + '%';
@@ -711,7 +711,7 @@ class VivagramProApp {
         // Ctrl/Cmd + Number keys for section navigation
         if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '5') {
             e.preventDefault();
-            const sections = ['main', 'examples', 'practices', 'templates'];
+            const sections = ['main', 'examples', 'practices', 'templates', 'development'];
             const index = parseInt(e.key) - 1;
             if (sections[index]) {
                 this.navigateToSection(sections[index]);

@@ -14,12 +14,13 @@
             <div class="nav-brand">
                 <h2>🎨 Vivagram Pro</h2>
             </div>
-            <div class="nav-menu" id="navMenu">
-                <button class="nav-item active" data-section="main">Главная</button>
-                <button class="nav-item" data-section="examples">Примеры</button>
-                <button class="nav-item" data-section="practices">Практики</button>
-                <button class="nav-item" data-section="templates">Шаблоны</button>
-            </div>
+        <div class="nav-menu" id="navMenu">
+            <button class="nav-item active" data-section="main">Главная</button>
+            <button class="nav-item" data-section="examples">Примеры</button>
+            <button class="nav-item" data-section="practices">Практики</button>
+            <button class="nav-item" data-section="templates">Шаблоны</button>
+            <button class="nav-item" data-section="development">В разработке</button>
+        </div>
         </div>
     </nav>
 
@@ -395,74 +396,48 @@
                 </div>
             </div>
 
-            <div class="examples-filter">
-                <button class="filter-btn active" data-filter="all">Все примеры</button>
-                <button class="filter-btn" data-filter="addition">Добавление</button>
-                <button class="filter-btn" data-filter="masking">Маскировка</button>
-                <button class="filter-btn" data-filter="style">Стиль</button>
-                <button class="filter-btn" data-filter="composition">Композиция</button>
-                <button class="filter-btn" data-filter="preservation">Сохранение</button>
+            <div class="coming-soon">
+                <div class="coming-soon-icon">🚀</div>
+                <h3>Дополнительные примеры</h3>
+                <p>Расширенная галерея примеров для каждой техники редактирования скоро появится в разделе "В разработке"</p>
+                <button class="btn btn--outline" data-section="development">Посмотреть планы</button>
             </div>
+        </div>
+    </section>
 
-            <div class="examples-grid">
-                <div class="example-card" data-category="addition">
-                    <div class="example-images">
-                        <img src="[ПРИМЕР_ДОБАВЛЕНИЯ_ДО]" alt="До добавления элементов">
-                        <img src="[ПРИМЕР_ДОБАВЛЕНИЯ_ПОСЛЕ]" alt="После добавления элементов">
-                    </div>
-                    <div class="example-info">
-                        <h4>Добавление аксессуаров</h4>
-                        <p>Органичное добавление очков и шляпы к портрету с сохранением естественного освещения</p>
-                        <div class="example-technique">➕ Добавление элементов</div>
-                    </div>
+    <!-- Development Section -->
+    <section id="development" class="section">
+        <div class="container">
+            <h2 class="section-title">🚧 В разработке</h2>
+            <p class="section-subtitle">Дополнительные примеры и техники, которые скоро появятся</p>
+
+            <div class="development-grid">
+                <div class="development-card">
+                    <div class="development-icon">🖼️</div>
+                    <h3>Галерея примеров</h3>
+                    <p>Расширенная коллекция примеров для каждой техники редактирования</p>
+                    <div class="development-status">В процессе</div>
                 </div>
 
-                <div class="example-card" data-category="masking">
-                    <div class="example-images">
-                        <img src="[ПРИМЕР_МАСКИРОВКИ_ДО]" alt="До селективного редактирования">
-                        <img src="[ПРИМЕР_МАСКИРОВКИ_ПОСЛЕ]" alt="После селективного редактирования">
-                    </div>
-                    <div class="example-info">
-                        <h4>Замена одежды</h4>
-                        <p>Точечная замена только рубашки модели без влияния на другие элементы фото</p>
-                        <div class="example-technique">🎭 Семантическая маскировка</div>
-                    </div>
+                <div class="development-card">
+                    <div class="development-icon">🎥</div>
+                    <h3>Видео-туториалы</h3>
+                    <p>Пошаговые видео-инструкции для каждой техники</p>
+                    <div class="development-status">Планируется</div>
                 </div>
 
-                <div class="example-card" data-category="style">
-                    <div class="example-images">
-                        <img src="[ПРИМЕР_СТИЛЯ_ДО]" alt="До переноса стиля">
-                        <img src="[ПРИМЕР_СТИЛЯ_ПОСЛЕ]" alt="После переноса стиля">
-                    </div>
-                    <div class="example-info">
-                        <h4>Пейзаж в стиле аниме</h4>
-                        <p>Превращение фотографии природы в рисунок в стиле Studio Ghibli</p>
-                        <div class="example-technique">🎨 Перенос стиля</div>
-                    </div>
+                <div class="development-card">
+                    <div class="development-icon">⚡</div>
+                    <h3>Интерактивные примеры</h3>
+                    <p>Возможность загрузить свое фото и попробовать техники онлайн</p>
+                    <div class="development-status">В планах</div>
                 </div>
 
-                <div class="example-card" data-category="composition">
-                    <div class="example-images">
-                        <img src="[ПРИМЕР_КОМПОЗИЦИИ_1]" alt="Исходное изображение 1">
-                        <img src="[ПРИМЕР_КОМПОЗИЦИИ_РЕЗУЛЬТАТ]" alt="Результат композиции">
-                    </div>
-                    <div class="example-info">
-                        <h4>Модная фотография</h4>
-                        <p>Объединение модели и одежды в профессиональную съёмку для интернет-магазина</p>
-                        <div class="example-technique">🖼️ Композиция</div>
-                    </div>
-                </div>
-
-                <div class="example-card" data-category="preservation">
-                    <div class="example-images">
-                        <img src="[ПРИМЕР_СОХРАНЕНИЯ_ДО]" alt="Оригинальный портрет">
-                        <img src="[ПРИМЕР_СОХРАНЕНИЯ_ПОСЛЕ]" alt="Портрет в новой среде">
-                    </div>
-                    <div class="example-info">
-                        <h4>Точное сохранение лица</h4>
-                        <p>Перемещение персонажа в новую локацию с сохранением всех черт лица</p>
-                        <div class="example-technique">🔒 Сохранение деталей</div>
-                    </div>
+                <div class="development-card">
+                    <div class="development-icon">📱</div>
+                    <h3>Мобильное приложение</h3>
+                    <p>Удобное приложение для редактирования на смартфоне</p>
+                    <div class="development-status">Исследование</div>
                 </div>
             </div>
         </div>
