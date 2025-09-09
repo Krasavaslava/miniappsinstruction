@@ -42,7 +42,7 @@ class VivagramProApp {
     setupProgressTracking() {
         const progressBar = document.getElementById('progressBar');
         if (progressBar) {
-            const sections = ['main', 'techniques', 'examples', 'practices', 'templates'];
+            const sections = ['main', 'examples', 'practices', 'templates'];
             const updateProgress = () => {
                 const progress = (this.visitedSections.size / sections.length) * 100;
                 progressBar.style.width = progress + '%';
@@ -132,7 +132,7 @@ class VivagramProApp {
         document.querySelectorAll('.technique-preview').forEach(preview => {
             preview.addEventListener('click', (e) => {
                 const technique = e.currentTarget.dataset.technique;
-                this.navigateToSection('techniques');
+                this.navigateToSection('examples');
                 setTimeout(() => this.switchTechnique(technique), 300);
             });
         });
@@ -711,7 +711,7 @@ class VivagramProApp {
         // Ctrl/Cmd + Number keys for section navigation
         if ((e.ctrlKey || e.metaKey) && e.key >= '1' && e.key <= '5') {
             e.preventDefault();
-            const sections = ['main', 'techniques', 'examples', 'practices', 'templates'];
+            const sections = ['main', 'examples', 'practices', 'templates'];
             const index = parseInt(e.key) - 1;
             if (sections[index]) {
                 this.navigateToSection(sections[index]);
@@ -733,7 +733,7 @@ class VivagramProApp {
         }
 
         // Arrow keys for technique navigation
-        if (this.currentSection === 'techniques' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+        if (this.currentSection === 'examples' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
             const techniques = ['addition', 'masking', 'style', 'composition', 'preservation'];
             const currentIndex = techniques.indexOf(this.currentTechnique);
 
